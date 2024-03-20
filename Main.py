@@ -147,7 +147,7 @@ class App(ctk.CTk):
         nbi_index = int(selected_nbi.split("_")[1])
         if selected_nbi.startswith("CTS"):
          nbi_index = nbi_index+8
-        print(nbi_index)
+        
         nbi_index = nbi_index-1
         Ports = Inp.NBI_and_Ports()
         Ports_for_NBI_Index = Ports[nbi_index][0]
@@ -189,7 +189,9 @@ class App(ctk.CTk):
              Vector_k_s = (NBI_seected_points[0][i]-Point_P_2[0],   NBI_seected_points[1][i]-Point_P_2[1], NBI_seected_points[2][i]-Point_P_2[2])
              vector_mag = (vector_B[0][i],vector_B[1][i], vector_B[2][i])
              Vector_NBI_k_i = (NBI_seected_points[0][4]-NBI_seected_points[0][0],   NBI_seected_points[1][4]-NBI_seected_points[1][0], NBI_seected_points[2][4]-NBI_seected_points[2][0])
-             Vector_k_delta = Vector_k_s -Vector_NBI_k_i 
+             Vector_k_delta = (Vector_k_s[0] - Vector_NBI_k_i[0],
+                  Vector_k_s[1] - Vector_NBI_k_i[1],
+                  Vector_k_s[2] - Vector_NBI_k_i[2])
              Angle_1 = angle_between_vectors(Vector_k_delta, vector_mag)
              Angle.append(Angle_1)
 
@@ -207,7 +209,7 @@ class App(ctk.CTk):
             y_ev = np.linspace(-6, 6, 100)/B[i]
             result = WF.CTS_wf(Angle[i], B[i], x_ev, y_ev)   
             Result_for_NBI_Port_new.append(result)
-        print(len(Result_for_NBI_Port_new))
+        print("len(Result) = ",len(Result_for_NBI_Port_new))
         
         
         return Result_for_NBI_Port_new
@@ -292,6 +294,7 @@ class App(ctk.CTk):
         selected_port = self.port_optionmenu.get()
         self.N.append(selected_nbi)
         self.Nt.append(selected_port)
+        print(self.N)
         NBI_seected_points, Point_P_2= self.data_instance.class_data(selected_nbi, selected_port)
         NBI_seected_points = np.array(NBI_seected_points)/100
 
@@ -333,8 +336,15 @@ class App(ctk.CTk):
             
         # Create a matplotlib figure
         fig, axs = plt.subplots(num_arrays, num_arrays, figsize=(8, 8))
-        
-        for i in range(num_arrays):
+        if num_arrays == 1:
+         MATRIX = self.suummmm(Result_for_NBI_Port[0], Result_for_NBI_Port[0])
+         min_value = np.min(MATRIX)
+         max_value = np.max(MATRIX)
+         im = axs.imshow(MATRIX, cmap='YlOrBr_r', origin='upper', aspect='auto', vmin=min_value, vmax=max_value)
+         axs.set_xticks([])
+         axs.set_yticks([])
+        else:
+         for i in range(num_arrays):
             for j in range(num_arrays):
 
                 MATRIX = self.suummmm(Result_for_NBI_Port[i], Result_for_NBI_Port[j])
@@ -351,8 +361,21 @@ class App(ctk.CTk):
         cax = fig.add_axes([0.93, 0.15, 0.02, 0.7])  # [x, y, width, height]
         cbar = plt.colorbar(im, cax=cax)
 
-        
-        for i in range(num_arrays):
+        Dia = self.Diagnostics_optionemenu.get()
+        if Dia=="CTS":
+         if num_arrays > 1:
+          for i in range(num_arrays):
+            if num_arrays>=11:
+                fonts = 6
+            else:
+                fonts = 9
+            selected_nbi = self.N[i]
+            selected_port = self.Nt[i]
+            selected_nbi=int(selected_nbi[4])
+            axs[num_arrays-1, i].set_xlabel(f'{selected_port[0]}{selected_port[2]}{selected_port[4:]}.C{selected_nbi}', fontsize=fonts)
+            axs[i, 0].set_ylabel(f'{selected_port[0]}{selected_port[2]}{selected_port[4:]}.C{selected_nbi}', fontsize=fonts)
+        else:
+         for i in range(num_arrays):
             if num_arrays>=11:
                 fonts = 6
             else:
@@ -460,6 +483,9 @@ class Data:
     def find_data(self, selected_nbi, selected_port, Ports_For_NBI):
         # Find index selected value
         index_NBI = int(int(selected_nbi.split('_')[1]) - 1)
+        if selected_nbi.startswith("CTS"):
+         index_NBI = index_NBI+8
+
         index_Port = Ports_For_NBI[index_NBI][0].index(selected_port)
         return index_NBI, index_Port
 

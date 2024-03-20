@@ -83,7 +83,7 @@ def new_NBI():
         NBI_end = [NBI_end_X, NBI_end_Y, NBI_end_Z]
         NBI_end = np.array(NBI_end)   
         
-        print(len(NBI_start))
+        
         
         return NBI_start, NBI_end
     
