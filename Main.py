@@ -10,7 +10,7 @@ import Magnetic_Field.Mag_field as MF
 import math
 from datetime import datetime
 
-#provet
+
 
 class App(ctk.CTk):
     def __init__(self):
@@ -45,10 +45,11 @@ class App(ctk.CTk):
     def pre_calculate(self, Dia):
         if Dia == "FIDA":
          Result_array = self.create_result_array_old()
-         
+
          self.all_results = Result_array    
         if Dia == "CTS":
-         print("LOL")
+         Result_array = []
+         self.all_results = Result_array   
         time = datetime.now().strftime("%H:%M:%S")
         self.textbox.insert("end", f"\n\n [{time}]: {Dia} ready \n\n ")
 
@@ -171,30 +172,41 @@ class App(ctk.CTk):
         B,vector_B =MF.mag_field(NBI_seected_points[0], NBI_seected_points[1], NBI_seected_points[2])
 
 
-        
+        #Arrays
         Angle = []
-        for i in range(len(NBI_seected_points[0])):
+        Result_for_NBI_Port_new = []
+
+
+        #Find_angles
+        if Dia =="FIDA":
+         for i in range(len(NBI_seected_points[0])):
             Vector1 = (NBI_seected_points[0][i]-Point_P_2[0],   NBI_seected_points[1][i]-Point_P_2[1], NBI_seected_points[2][i]-Point_P_2[2])
             vector2 = (vector_B[0][i],vector_B[1][i], vector_B[2][i])
             Angle_1 = angle_between_vectors(Vector1, vector2)
             Angle.append(Angle_1)
-        Result_for_NBI_Port_new = []
+        if Dia =="CTS":
+         for i in range(len(NBI_seected_points[0])):
+             Vector_k_s = (NBI_seected_points[0][i]-Point_P_2[0],   NBI_seected_points[1][i]-Point_P_2[1], NBI_seected_points[2][i]-Point_P_2[2])
+             vector_mag = (vector_B[0][i],vector_B[1][i], vector_B[2][i])
+             Vector_NBI_k_i = (NBI_seected_points[0][4]-NBI_seected_points[0][0],   NBI_seected_points[1][4]-NBI_seected_points[1][0], NBI_seected_points[2][4]-NBI_seected_points[2][0])
+             Vector_k_delta = Vector_k_s -Vector_NBI_k_i 
+             Angle_1 = angle_between_vectors(Vector_k_delta, vector_mag)
+             Angle.append(Angle_1)
+
+            
+
         for i in range(len(B)):
-
-
-         
-     
          #Obtain_result_of_WF
          if Dia =="FIDA":
-          x_ev = np.linspace(10, 100, 100)
-          y_ev = np.linspace(-100, 100, 100)/B[i]
-          result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev)
-          Result_for_NBI_Port_new.append(result)
+            x_ev = np.linspace(10, 100, 100)
+            y_ev = np.linspace(-100, 100, 100)/B[i]
+            result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev)
+            Result_for_NBI_Port_new.append(result)
          if Dia =="CTS":
-           x_ev = np.linspace(1, 6, 100)
-           y_ev = np.linspace(-6, 6, 100)/B[i]
-           result = WF.CTS_wf(Angle[i], B[i], x_ev, y_ev)   
-           Result_for_NBI_Port_new.append(result)
+            x_ev = np.linspace(1, 6, 100)
+            y_ev = np.linspace(-6, 6, 100)/B[i]
+            result = WF.CTS_wf(Angle[i], B[i], x_ev, y_ev)   
+            Result_for_NBI_Port_new.append(result)
         print(len(Result_for_NBI_Port_new))
         
         
@@ -302,11 +314,11 @@ class App(ctk.CTk):
         selected_port = self.port_optionmenu.get()
         Dia = self.Diagnostics_optionemenu.get()
         
-        # Получение текущей временной метки
+        
         timestamp = datetime.now().strftime("%H:%M:%S")
 
 
-        message = f"[{timestamp}]: {Dia}:\n\nSelected Port:    {selected_port}\nSelected NBI:     {selected_nbi}\n\n"
+        message = f"[{timestamp}]: {Dia}:\n\nSelected Port:    {selected_port}\nSelected:     {selected_nbi}\n\n"
 
 
         self.textbox.insert("end", message)
