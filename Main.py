@@ -10,7 +10,7 @@ import Magnetic_Field.Mag_field as MF
 import math
 from datetime import datetime
 
-
+#provet
 
 class App(ctk.CTk):
     def __init__(self):
