@@ -1,0 +1,7 @@
+INPUT
+
+
+1) The coordinates were set only in the first of the 5 areas. Each area is divided into two zones, which are called 0 and 1. In the file, the area is named as Module. The zone is named as a Submodule.
+2) To convert the coordinates, we first converted the coordinates to a cylindrical coordinate system and rotated by an angle for each module since the modules are identical every 72 degrees.
+3) After that, for those ports that are in 1 SubModule, we made a 180 degree rotation.
+4) Result_Tranformation_for_submodule = Ports_coordinates

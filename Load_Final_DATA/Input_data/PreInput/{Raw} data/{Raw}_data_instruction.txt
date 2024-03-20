@@ -1,0 +1,2 @@
+1) The xxx file contains the coordinates of the ports. 
+2) Exclude the red - highlighted ones, we have rewritten all the necessary coordinates in a more convenient way in the xxx file
