@@ -96,16 +96,17 @@ def prob_sigma(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radia
 
 
 
-def prob_st(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B):
+def prob_st(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B, cross_V_val):
         
      #v_parallel and v_perp      
     
      v_parallel = np.sqrt(np.abs(2 * (x - B * np.abs(y)) / m)) * np.sign(y)
      v_perp = np.sqrt(np.abs(2 * B * np.abs(y) / m))
      
+     K_perp = (1/2)*m*v_perp**2
      
-     
-    #V_grad = (1/2)*m*v_perp**2*cross_products_lengths/(B**3*(1.6*10**(-19)))
+     V_grad = K_perp/(B*1.6*10**(-19)) * cross_V_val/(B**2)
+
      
      
 
@@ -115,13 +116,14 @@ def prob_st(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B
 
  
      
-     
+     rez=rez/np.sqrt(v_parallel**2+V_grad**2)
      rez = np.where(rez >= 0, rez, 0)
      rez = np.nan_to_num(rez)
+
      return rez
 
 
-def weight_Function(phi, B, x, y):
+def weight_Function(phi, B, x, y, cross_V):
     phi_radian =  np.pi - np.pi*phi/180
     
     # constant 
@@ -149,12 +151,14 @@ def weight_Function(phi, B, x, y):
     y = y*(1.6*10**(-19))*10**3
 
     #where x - E and y - \mu
-     
+
+    
+
 
        
     x, y = np.meshgrid(x, y)
     
-    result = np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B), 0)
+    result = np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B,cross_V ), 0)
     
     return result
 
@@ -219,7 +223,7 @@ def WF_CTS(x,y,u1, u2, phi_radian):
     rez = 1/np.pi * (gyroangle_1_l - gyroangle_2_l)
 
     result = np.where(rez >= 0, rez, np.nan)
-
+    
 
     return result
     

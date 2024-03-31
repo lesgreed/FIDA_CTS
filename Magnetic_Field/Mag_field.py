@@ -3,7 +3,10 @@ import numpy as np
 from scipy.optimize import approx_fprime
 
 
-def mag_field_find(x1, x2, x3):
+def mag_field_find(point):
+  x1 = point[0]
+  x2 = point[1]
+  x3 = point[2]
   client = Client('http://esb:8280/services/Mag3dProxy?wsdl')
   cl_coilDB=Client('http://esb.ipp-hgw.mpg.de:8280/services/CoilsDB?wsdl')
  
@@ -27,18 +30,44 @@ def mag_field_find(x1, x2, x3):
 
 
 def mag_field(x1, x2, x3):
-    #epsilon = 1e-5
-    #point = np.array([x1, x2, x3])
+    points = np.array([x1, x2, x3])  
+
+    B, Vector_B = mag_field_find(points) 
+
+   
+    grad = calculate_gradient_of_magnetic_field(points, delta=1e-6)
+
+
     
-    #gradient_B = np.zeros_like(point)
+    Vector_B_np = np.array(Vector_B)
+    grad = np.array(grad)
+    cross_V = np.zeros_like(Vector_B)
 
-    #for i in range(len(point)):
-     #   delta = np.zeros_like(point)
-      #  delta[i] = epsilon
-       # gradient_B[i] = (mag_field_find(*(point + delta))[0] - mag_field_find(*(point - delta))[0]) / (2 * epsilon)
+    for i in range(len(Vector_B_np[0])):
+        cross_V[:, i] = np.cross(Vector_B_np[:, i], grad[:, i])
+    cross_V_val = np.sqrt(cross_V[0]**2 + cross_V[1]**2 + cross_V[2]**2)
+    print(cross_V_val/B**2)
 
-    B, Vector_B = mag_field_find(x1, x2, x3)
+    return B, Vector_B, cross_V_val
 
-    #cross_products = np.cross(Vector_B, gradient_B, axis=0)
-    #cross_products_lengths = np.linalg.norm(cross_products, axis=0)
-    return B, Vector_B#, cross_products_lengths
+
+def calculate_gradient_of_magnetic_field(points, delta=1e-6):
+    gradients = np.zeros_like(points)  
+
+    delta_points = points.copy()  
+    for i in range(len(points)):
+        delta_points[i] += delta
+
+    delta_points_2 = points.copy()  
+    for i in range(len(points)):
+        delta_points_2[i] -= delta
+
+    _, B_delta = mag_field_find(delta_points)
+    _, B_norm = mag_field_find(delta_points_2)
+
+    B_delta = np.array(B_delta) 
+    B_norm = np.array(B_norm)    
+
+    gradients = (B_delta - B_norm) / (2*delta)
+
+    return gradients

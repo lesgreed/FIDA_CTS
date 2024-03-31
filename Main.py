@@ -169,7 +169,7 @@ class App(ctk.CTk):
             
     def create_result_array_for_port(self, NBI_seected_points, Point_P_2):
         Dia = self.Diagnostics_optionemenu.get()
-        B,vector_B =MF.mag_field(NBI_seected_points[0], NBI_seected_points[1], NBI_seected_points[2])
+        B,vector_B, cross_V =MF.mag_field(NBI_seected_points[0], NBI_seected_points[1], NBI_seected_points[2])
 
 
         #Arrays
@@ -184,6 +184,7 @@ class App(ctk.CTk):
             vector2 = (vector_B[0][i],vector_B[1][i], vector_B[2][i])
             Angle_1 = angle_between_vectors(Vector1, vector2)
             Angle.append(Angle_1)
+
         if Dia =="CTS":
          for i in range(len(NBI_seected_points[0])):
              Vector_k_s = (NBI_seected_points[0][i]-Point_P_2[0],   NBI_seected_points[1][i]-Point_P_2[1], NBI_seected_points[2][i]-Point_P_2[2])
@@ -200,9 +201,10 @@ class App(ctk.CTk):
         for i in range(len(B)):
          #Obtain_result_of_WF
          if Dia =="FIDA":
+
             x_ev = np.linspace(10, 100, 100)
             y_ev = np.linspace(-100, 100, 100)/B[i]
-            result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev)
+            result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev, cross_V[i])
             Result_for_NBI_Port_new.append(result)
          if Dia =="CTS":
             x_ev = np.linspace(1, 6, 100)
@@ -429,6 +431,8 @@ class App(ctk.CTk):
             for i in range(len(array_1)):
                 for j in range(len(array_2)):
                     MATRIX[i, j] = np.sum(array_1[i] * array_2[j])
+            MATRIX = MATRIX/np.max(MATRIX)
+
             return MATRIX
 
 
