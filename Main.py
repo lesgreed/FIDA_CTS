@@ -202,8 +202,8 @@ class App(ctk.CTk):
          #Obtain_result_of_WF
          if Dia =="FIDA":
 
-            x_ev = np.linspace(10, 100, 100)
-            y_ev = np.linspace(-100, 100, 100)/B[i]
+            x_ev = np.linspace(10, 100, 150)
+            y_ev = np.linspace(-100, 100, 150)/B[i]
             result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev, cross_V[i])
             Result_for_NBI_Port_new.append(result)
          if Dia =="CTS":
@@ -352,7 +352,7 @@ class App(ctk.CTk):
                 MATRIX = self.suummmm(Result_for_NBI_Port[i], Result_for_NBI_Port[j])
                 min_value = np.min(MATRIX)
                 max_value = np.max(MATRIX)
-                im = axs[i, j].imshow(MATRIX, cmap='YlOrBr_r', origin='upper', aspect='auto', vmin=min_value, vmax=max_value)
+                im = axs[i, j].imshow(MATRIX, cmap='YlOrBr_r', origin='upper', aspect='auto', vmin=0.0, vmax=1.0)
                 axs[i, j].set_xticks([])
                 axs[i, j].set_yticks([])
 
@@ -431,7 +431,7 @@ class App(ctk.CTk):
             for i in range(len(array_1)):
                 for j in range(len(array_2)):
                     MATRIX[i, j] = np.sum(array_1[i] * array_2[j])
-            #MATRIX = MATRIX/np.max(MATRIX)
+            MATRIX = MATRIX/np.max(MATRIX)
 
             return MATRIX
 
@@ -552,17 +552,17 @@ class Data:
          k_z = (NBI_Points_end[2] - NBI_Points_start[2])
 
 
-         for j in range(41):
+         for j in range(101):
 
-                 x_k = NBI_Points_start[0] + k_x * (j / 40)
-                 y_k = NBI_Points_start[1] + k_y * (j / 40)
-                 z_k = NBI_Points_start[2] + k_z * (j / 40)
+                 x_k = NBI_Points_start[0] + k_x * (j / 100)
+                 y_k = NBI_Points_start[1] + k_y * (j / 100)
+                 z_k = NBI_Points_start[2] + k_z * (j / 100)
                  
                  
-                 if j !=0 and j != 40:
-                  X_point_on_NBI = np.append(X_point_on_NBI, x_k)
-                  Y_point_on_NBI = np.append(Y_point_on_NBI, y_k)
-                  Z_point_on_NBI = np.append(Z_point_on_NBI, z_k)
+                 
+                 X_point_on_NBI = np.append(X_point_on_NBI, x_k)
+                 Y_point_on_NBI = np.append(Y_point_on_NBI, y_k)
+                 Z_point_on_NBI = np.append(Z_point_on_NBI, z_k)
 
          NBI_points = np.array([X_point_on_NBI, Y_point_on_NBI, Z_point_on_NBI])
          return NBI_points 

@@ -105,7 +105,7 @@ def prob_st(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B
      
      K_perp = (1/2)*m*v_perp**2
      
-     V_grad = K_perp/(B*1.6*10**(-19)) * cross_V_val/(B**2)
+    
 
      
      
@@ -116,7 +116,7 @@ def prob_st(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B
 
  
      
-     rez=rez/np.sqrt(v_parallel**2+V_grad**2)
+     
      rez = np.where(rez >= 0, rez, 0)
      rez = np.nan_to_num(rez)
 
@@ -128,8 +128,12 @@ def weight_Function(phi, B, x, y, cross_V):
     
     # constant 
     lambda_0 = 656.1 * 10**(-9)
-    lambda_1 = 660.0 * 10**(-9)
-    lambda_2 = 660.1 * 10**(-9)
+    lambda_1 = 658.1 * 10**(-9)
+    lambda_2 = 663.1 * 10**(-9)
+
+
+    lambda_3 = 649.1 * 10**(-9)
+    lambda_4 = 654.1 * 10**(-9)
     c = 299792458
     
     
@@ -158,7 +162,7 @@ def weight_Function(phi, B, x, y, cross_V):
        
     x, y = np.meshgrid(x, y)
     
-    result = np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B,cross_V ), 0)
+    result = np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B,cross_V ), 0) + np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_3, lambda_4, c,phi_radian, B,cross_V ), 0)
     
     return result
 
