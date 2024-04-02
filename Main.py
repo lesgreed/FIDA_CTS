@@ -431,7 +431,7 @@ class App(ctk.CTk):
             for i in range(len(array_1)):
                 for j in range(len(array_2)):
                     MATRIX[i, j] = np.sum(array_1[i] * array_2[j])
-            MATRIX = MATRIX/np.max(MATRIX)
+            #MATRIX = MATRIX/np.max(MATRIX)
 
             return MATRIX
 
