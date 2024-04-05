@@ -211,7 +211,7 @@ class App(ctk.CTk):
             y_ev = np.linspace(-6, 6, 100)/B[i]
             result = WF.CTS_wf(Angle[i], B[i], x_ev, y_ev)   
             Result_for_NBI_Port_new.append(result)
-        print("len(Result) = ",len(Result_for_NBI_Port_new))
+        #print("len(Result) = ",len(Result_for_NBI_Port_new))
         
         
         return Result_for_NBI_Port_new
@@ -340,9 +340,9 @@ class App(ctk.CTk):
         fig, axs = plt.subplots(num_arrays, num_arrays, figsize=(8, 8))
         if num_arrays == 1:
          MATRIX = self.suummmm(Result_for_NBI_Port[0], Result_for_NBI_Port[0])
-         min_value = np.min(MATRIX)
-         max_value = np.max(MATRIX)
-         im = axs.imshow(MATRIX, cmap='YlOrBr_r', origin='upper', aspect='auto', vmin=min_value, vmax=max_value)
+         #min_value = np.min(MATRIX)
+         #max_value = np.max(MATRIX)
+         im = axs.imshow(MATRIX, cmap='jet', origin='upper', aspect='auto', vmin=0.0, vmax=1.0)
          axs.set_xticks([])
          axs.set_yticks([])
         else:
@@ -352,7 +352,7 @@ class App(ctk.CTk):
                 MATRIX = self.suummmm(Result_for_NBI_Port[i], Result_for_NBI_Port[j])
                 min_value = np.min(MATRIX)
                 max_value = np.max(MATRIX)
-                im = axs[i, j].imshow(MATRIX, cmap='YlOrBr_r', origin='upper', aspect='auto', vmin=0.0, vmax=1.0)
+                im = axs[i, j].imshow(MATRIX, cmap='jet', origin='upper', aspect='auto', vmin=0, vmax=1.0)
                 axs[i, j].set_xticks([])
                 axs[i, j].set_yticks([])
 
@@ -470,7 +470,10 @@ class Data:
         NBI_Points_start = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])]]      
         NBI_Points_end = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])]]
         NBI_seected_points = self.Points_on_NBI(NBI_Points_start, NBI_Points_end)
-        
+        print("X=", NBI_seected_points[0])
+        print("Y=", NBI_seected_points[1])
+        print("Z=", NBI_seected_points[2])
+     
         
         #Array with point on NBI
        # NBI_seected_points = self.find_point_on_NBI(Array_points_on_selected_NBI_and_Port, NBI_points, index_NBI)
@@ -483,7 +486,17 @@ class Data:
         return NBI_seected_points, Point_p_2
 
 
+    def write_data_to_excel(self, output_sheet, headers, data):
+    # Write column headers
+      for i, header in enumerate(headers, start=5):
+        output_sheet.cell(row=5, column=i).value = header
 
+    # Write data in separate columns
+      for col_idx, column_data in enumerate(data, start=5):
+        for row_idx, value in enumerate(column_data, start=6):
+            output_sheet.cell(row=row_idx, column=col_idx).value = value
+
+      return output_sheet
     def find_data(self, selected_nbi, selected_port, Ports_For_NBI):
         # Find index selected value
         index_NBI = int(int(selected_nbi.split('_')[1]) - 1)
@@ -552,11 +565,11 @@ class Data:
          k_z = (NBI_Points_end[2] - NBI_Points_start[2])
 
 
-         for j in range(101):
+         for j in range(31):
 
-                 x_k = NBI_Points_start[0] + k_x * (j / 100)
-                 y_k = NBI_Points_start[1] + k_y * (j / 100)
-                 z_k = NBI_Points_start[2] + k_z * (j / 100)
+                 x_k = NBI_Points_start[0] + k_x * (j / 30)
+                 y_k = NBI_Points_start[1] + k_y * (j / 30)
+                 z_k = NBI_Points_start[2] + k_z * (j / 30)
                  
                  
                  

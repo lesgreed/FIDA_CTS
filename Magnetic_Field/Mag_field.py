@@ -46,7 +46,7 @@ def mag_field(x1, x2, x3):
     for i in range(len(Vector_B_np[0])):
         cross_V[:, i] = np.cross(Vector_B_np[:, i], grad[:, i])
     cross_V_val = np.sqrt(cross_V[0]**2 + cross_V[1]**2 + cross_V[2]**2)
-    print(cross_V_val/B**2)
+    #print(cross_V_val/B**2)
 
     return B, Vector_B, cross_V_val
 

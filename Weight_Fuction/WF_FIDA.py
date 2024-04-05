@@ -103,7 +103,7 @@ def prob_st(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B
      v_parallel = np.sqrt(np.abs(2 * (x - B * np.abs(y)) / m)) * np.sign(y)
      v_perp = np.sqrt(np.abs(2 * B * np.abs(y) / m))
      
-     K_perp = (1/2)*m*v_perp**2
+     
      
     
 
