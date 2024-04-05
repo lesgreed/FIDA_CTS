@@ -36,22 +36,24 @@ class App(ctk.CTk):
 
         # Initialize Port Options
         self.update_port_options(self.nbi_options[0])
-         #Keep track of the displayed graph
+         
         self.current_graph = None
-        self.N=[]
-        self.Nt=[]
+        self.all_results=[]
 
 
-    def pre_calculate(self, Dia):
-        if Dia == "FIDA":
-         Result_array = self.create_result_array_old()
+    def pre_calculate(self):
+        self.Name_Ports = ['2_1_AEA', '2_1_AEA', '2_1_AEM', '2_1_AEM', '2_1_AET', '2_1_AET'] 
+        self.Name_NBI = ['NBI_7', 'NBI_8', 'NBI_7', 'NBI_8', 'NBI_7', 'NBI_8' ]
+        if len(self.all_results) ==0:
+         Result_array = self.create_result_array_old()  
+         self.all_results = Result_array
+        else:
+            self.all_results = self.all_results[:6]
 
-         self.all_results = Result_array    
-        if Dia == "CTS":
-         Result_array = []
-         self.all_results = Result_array   
+ 
         time = datetime.now().strftime("%H:%M:%S")
-        self.textbox.insert("end", f"\n\n [{time}]: {Dia} ready \n\n ")
+        self.textbox.insert("end", f"\n\n [{time}]: Old data ready \n\n ")
+        
 
         
         
@@ -69,16 +71,20 @@ class App(ctk.CTk):
         self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="FIDA", font=ctk.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
         
-        
+       
+        self.show_old_button_label= ctk.CTkLabel(self.sidebar_frame, text="Raw data:", anchor="w")    
+        self.show_old_button_label.grid(row=2, column=0, padx=20, pady=(300,0))     
+        self.show_old_button = ctk.CTkButton(self.sidebar_frame, text="Update data", command=lambda: self.pre_calculate())
+        self.show_old_button.grid(row=2, column=0, padx=20, pady=(360,0))
         
         
         self.Diagnostics_label = ctk.CTkLabel(self.sidebar_frame, text="Diagnostics:", anchor="w")
         self.Diagnostics_label.grid(row=3, column=0, padx=20, pady=(10,0))
-        self.Diagnostics_optionemenu = ctk.CTkOptionMenu(self.sidebar_frame, values=["FIDA", "CTS"], command=self.pre_calculate)
-        self.Diagnostics_optionemenu.grid(row=4, column=0, padx=20, pady=(10, 10))
+        self.Diagnostics_optionemenu = ctk.CTkOptionMenu(self.sidebar_frame, values=["FIDA", "CTS"])
+        self.Diagnostics_optionemenu.grid(row=4, column=0, padx=20, pady=(0, 10))
         
         
-        
+
         
         self.appearance_mode_label = ctk.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
@@ -90,6 +96,8 @@ class App(ctk.CTk):
         self.scaling_optionemenu = ctk.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"],
                                                                command=self.change_scaling_event)
         self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
+        
+      
 
     def create_additional_widgets(self):
         # create textbox
@@ -164,12 +172,9 @@ class App(ctk.CTk):
             self.port_optionmenu.set(self.port_options[0])
             
             
-            
-            
-            
     def create_result_array_for_port(self, NBI_seected_points, Point_P_2):
         Dia = self.Diagnostics_optionemenu.get()
-        B,vector_B, cross_V =MF.mag_field(NBI_seected_points[0], NBI_seected_points[1], NBI_seected_points[2])
+        B,vector_B =MF.mag_field(NBI_seected_points[0], NBI_seected_points[1], NBI_seected_points[2])
 
 
         #Arrays
@@ -202,9 +207,9 @@ class App(ctk.CTk):
          #Obtain_result_of_WF
          if Dia =="FIDA":
 
-            x_ev = np.linspace(10, 100, 150)
-            y_ev = np.linspace(-100, 100, 150)/B[i]
-            result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev, cross_V[i])
+            x_ev = np.linspace(10, 100, 100)
+            y_ev = np.linspace(-100, 100, 100)/B[i]
+            result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev)
             Result_for_NBI_Port_new.append(result)
          if Dia =="CTS":
             x_ev = np.linspace(1, 6, 100)
@@ -218,85 +223,27 @@ class App(ctk.CTk):
         
 
     def create_result_array_old(self):
-        
-        
-        
-        
-        #2.1 AEA NBI 7  
-        selected_nbi_1 = str("NBI_7") 
-        selected_port_1 = str("2_1_AEA")
-        NBI_seected_points, Point_P_2= self.data_instance.class_data(selected_nbi_1, selected_port_1)
-        NBI_seected_points = np.array(NBI_seected_points)/100
- 
-    
-        Result_for_NBI_Port_1= self.create_result_array_for_port(NBI_seected_points, Point_P_2)
-        
-        
-        #2.1 AEA NBI 8  
-        selected_nbi_2 = str("NBI_8") 
-        selected_port_2 = str("2_1_AEA")
-        NBI_seected_points_2, Point_P_2_2= self.data_instance.class_data(selected_nbi_2, selected_port_2)
-        NBI_seected_points_2 = np.array(NBI_seected_points_2)/100
- 
-    
-        Result_for_NBI_Port_2 = self.create_result_array_for_port(NBI_seected_points_2, Point_P_2_2)
-        
-        #2.1 AEM NBI 7  
-        selected_nbi = str("NBI_7") 
-        selected_port = str("2_1_AEM")
-        NBI_seected_points, Point_P_2= self.data_instance.class_data(selected_nbi, selected_port)
-        NBI_seected_points = np.array(NBI_seected_points)/100
- 
-    
-        Result_for_NBI_Port_3 = self.create_result_array_for_port(NBI_seected_points, Point_P_2)
-        
-        #2.1 AEM NBI 8  
-        selected_nbi = str("NBI_8") 
-        selected_port = str("2_1_AEM")
-        NBI_seected_points, Point_P_2= self.data_instance.class_data(selected_nbi, selected_port)
-        NBI_seected_points = np.array(NBI_seected_points)/100
- 
-    
-        Result_for_NBI_Port_4 = self.create_result_array_for_port(NBI_seected_points, Point_P_2)
-        
-        
-        
-        #2.1 AET NBI 7  
-        selected_nbi = str("NBI_7") 
-        selected_port = str("2_1_AET")
-        NBI_seected_points, Point_P_2= self.data_instance.class_data(selected_nbi, selected_port)
-        NBI_seected_points = np.array(NBI_seected_points)/100
- 
-    
-        Result_for_NBI_Port_5 = self.create_result_array_for_port(NBI_seected_points, Point_P_2)
-        
-        
-                
-        
-        #2.1 AET NBI 8
-        selected_nbi = str("NBI_8") 
-        selected_port = str("2_1_AET")
-        NBI_seected_points, Point_P_2= self.data_instance.class_data(selected_nbi, selected_port)
-        NBI_seected_points = np.array(NBI_seected_points)/100
- 
-    
-        Result_for_NBI_Port_6 = self.create_result_array_for_port(NBI_seected_points, Point_P_2)
-        
-        
-        Result_array = [Result_for_NBI_Port_1, Result_for_NBI_Port_2, Result_for_NBI_Port_3, Result_for_NBI_Port_4, Result_for_NBI_Port_5, Result_for_NBI_Port_6]
-        
-        
+        Result_array = []
+        for i in range(len(self.Name_NBI)):
+            n_nbi = str(self.Name_NBI[i])
+            n_port = str(self.Name_Ports[i])
+            NBI_seected_points, Point_P= self.data_instance.class_data(n_nbi, n_port)
+            NBI_seected_points = np.array(NBI_seected_points)/100
+            Result_for_NBI_Port= self.create_result_array_for_port(NBI_seected_points, Point_P)
+            Result_array.append(Result_for_NBI_Port)
         
         return Result_array
         
     
     def generate_and_show_graph(self):
-        
+        #User
         selected_nbi = self.nbi_optionmenu.get()
         selected_port = self.port_optionmenu.get()
-        self.N.append(selected_nbi)
-        self.Nt.append(selected_port)
-        print(self.N)
+        
+        #Data
+        self.Name_NBI.append(selected_nbi)
+        self.Name_Ports.append(selected_port)
+        print(self.Name_NBI)
         NBI_seected_points, Point_P_2= self.data_instance.class_data(selected_nbi, selected_port)
         NBI_seected_points = np.array(NBI_seected_points)/100
 
@@ -315,17 +262,16 @@ class App(ctk.CTk):
         
         
     def dummy_function(self):
+        #User 
         selected_nbi = self.nbi_optionmenu.get()
         selected_port = self.port_optionmenu.get()
         Dia = self.Diagnostics_optionemenu.get()
         
-        
+        #Time
         timestamp = datetime.now().strftime("%H:%M:%S")
-
-
+          
+        #Message  
         message = f"[{timestamp}]: {Dia}:\n\nSelected Port:    {selected_port}\nSelected:     {selected_nbi}\n\n"
-
-
         self.textbox.insert("end", message)
 
 
@@ -334,7 +280,6 @@ class App(ctk.CTk):
         
     def draw_graph_on_canvas(self, Result_for_NBI_Port):
         num_arrays = len(Result_for_NBI_Port)
-
             
         # Create a matplotlib figure
         fig, axs = plt.subplots(num_arrays, num_arrays, figsize=(8, 8))
@@ -361,52 +306,23 @@ class App(ctk.CTk):
         
         # Add colorbar to the last subplot
         cax = fig.add_axes([0.93, 0.15, 0.02, 0.7])  # [x, y, width, height]
-        cbar = plt.colorbar(im, cax=cax)
+        plt.colorbar(im, cax=cax)
 
-        Dia = self.Diagnostics_optionemenu.get()
-        if Dia=="CTS":
-         if num_arrays > 1:
-          for i in range(num_arrays):
+
+        for i in range(num_arrays):
             if num_arrays>=11:
                 fonts = 6
             else:
                 fonts = 9
-            selected_nbi = self.N[i]
-            selected_port = self.Nt[i]
-            selected_nbi=int(selected_nbi[4])
-            axs[num_arrays-1, i].set_xlabel(f'{selected_port[0]}{selected_port[2]}{selected_port[4:]}.C{selected_nbi}', fontsize=fonts)
-            axs[i, 0].set_ylabel(f'{selected_port[0]}{selected_port[2]}{selected_port[4:]}.C{selected_nbi}', fontsize=fonts)
-        else:
-         for i in range(num_arrays):
-            if num_arrays>=11:
-                fonts = 6
+
+            selected_nbi = self.Name_NBI[i]
+            selected_port = self.Name_Ports[i]
+            if selected_nbi[0] == 'N':
+               name = 'S'
             else:
-                fonts = 9
-            if i==0:
-
-                axs[num_arrays-1, i].set_xlabel('21AEA.S7', fontsize=fonts)
-                axs[i, 0].set_ylabel('21AEA.S7', fontsize=fonts)
-
-            if i== 1:
-                axs[num_arrays-1, i].set_xlabel('21AEA.S8', fontsize=fonts)
-                axs[i, 0].set_ylabel('21AEA.S8', fontsize=fonts)
-            if i== 2:
-                axs[num_arrays-1, i].set_xlabel('21AEM.S7', fontsize=fonts)
-                axs[i, 0].set_ylabel('21AEM.S7', fontsize=fonts)
-            if i== 3:
-                axs[num_arrays-1, i].set_xlabel('21AEM.S8', fontsize=fonts)
-                axs[i, 0].set_ylabel('21AEM.S8', fontsize=fonts)
-            if i== 4:
-                axs[num_arrays-1, i].set_xlabel('21AET.S7', fontsize=fonts)
-                axs[i, 0].set_ylabel('21AET.S7', fontsize=fonts)
-            if i== 5:
-                axs[num_arrays-1, i].set_xlabel('21AET.S8', fontsize=fonts) 
-                axs[i, 0].set_ylabel('21AET.8', fontsize=fonts)
-            if i>=6:
-               selected_nbi = self.N[i-6]
-               selected_port = self.Nt[i-6]
-               axs[num_arrays-1, i].set_xlabel(f'{selected_port[0]}{selected_port[2]}{selected_port[4:]}.S{selected_nbi[4]}', fontsize=fonts)
-               axs[i, 0].set_ylabel(f'{selected_port[0]}{selected_port[2]}{selected_port[4:]}.S{selected_nbi[4]}', fontsize=fonts)
+               name = 'C'
+            axs[num_arrays-1, i].set_xlabel(f'{selected_port[0]}{selected_port[2]}{selected_port[4:]}.{name}{selected_nbi[4]}', fontsize=fonts)
+            axs[i, 0].set_ylabel(f'{selected_port[0]}{selected_port[2]}{selected_port[4:]}.{name}{selected_nbi[4]}', fontsize=fonts)
 
 
 
@@ -452,14 +368,7 @@ class Data:
         P_1, P_2_new = Inp.new_Ports()
         NBI_start, NBI_end = Inp.new_NBI()
         index_Port_in_general = int(Ports_For_NBI[index_NBI][3][index_Port])
-        
-        
-        
-        
-        
-        #Number_index
-        Array_points_on_selected_NBI_and_Port  = self.POints_find(index_NBI,  index_Port, Ports_For_NBI)
-        
+
         
         #NBI_data
         NBI_points = self.points_on_line_NBI(NBI_start, NBI_end)
@@ -469,15 +378,7 @@ class Data:
               
         NBI_Points_start = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])]]      
         NBI_Points_end = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])]]
-        NBI_seected_points = self.Points_on_NBI(NBI_Points_start, NBI_Points_end)
-        print("X=", NBI_seected_points[0])
-        print("Y=", NBI_seected_points[1])
-        print("Z=", NBI_seected_points[2])
-     
-        
-        #Array with point on NBI
-       # NBI_seected_points = self.find_point_on_NBI(Array_points_on_selected_NBI_and_Port, NBI_points, index_NBI)
-        
+        NBI_seected_points = self.Points_on_NBI(NBI_Points_start, NBI_Points_end, 103)
         
         #Ports_input_P_2
         
@@ -485,18 +386,6 @@ class Data:
     
         return NBI_seected_points, Point_p_2
 
-
-    def write_data_to_excel(self, output_sheet, headers, data):
-    # Write column headers
-      for i, header in enumerate(headers, start=5):
-        output_sheet.cell(row=5, column=i).value = header
-
-    # Write data in separate columns
-      for col_idx, column_data in enumerate(data, start=5):
-        for row_idx, value in enumerate(column_data, start=6):
-            output_sheet.cell(row=row_idx, column=col_idx).value = value
-
-      return output_sheet
     def find_data(self, selected_nbi, selected_port, Ports_For_NBI):
         # Find index selected value
         index_NBI = int(int(selected_nbi.split('_')[1]) - 1)
@@ -514,7 +403,6 @@ class Data:
             Arr_index.append(index)
         
         return Arr_index
-
 
     def points_on_line_NBI(self, NBI_start, NBI_end):
 
@@ -542,18 +430,8 @@ class Data:
 
          NBI_points = np.array([X_point_on_NBI, Y_point_on_NBI, Z_point_on_NBI])
          return NBI_points 
-
-    def find_point_on_NBI(self, Array_points_on_selected_NBI_and_Port, NBI_points, index_NBI):
-        NBI_seected_points = [[],[],[]]
-        for i in range(len(Array_points_on_selected_NBI_and_Port)):
-            j = int(Array_points_on_selected_NBI_and_Port[i])
-            NBI_seected_points[0].append(NBI_points[0][index_NBI][j])
-            NBI_seected_points[1].append(NBI_points[1][index_NBI][j])
-            NBI_seected_points[2].append(NBI_points[2][index_NBI][j])
-        return NBI_seected_points
-            
     
-    def Points_on_NBI(self, NBI_Points_start, NBI_Points_end):
+    def Points_on_NBI(self, NBI_Points_start, NBI_Points_end, N):
 
          X_point_on_NBI = np.array([])
          Y_point_on_NBI = np.array([])
@@ -565,11 +443,11 @@ class Data:
          k_z = (NBI_Points_end[2] - NBI_Points_start[2])
 
 
-         for j in range(31):
+         for j in range(N):
 
-                 x_k = NBI_Points_start[0] + k_x * (j / 30)
-                 y_k = NBI_Points_start[1] + k_y * (j / 30)
-                 z_k = NBI_Points_start[2] + k_z * (j / 30)
+                 x_k = NBI_Points_start[0] + k_x * (j / (N-1))
+                 y_k = NBI_Points_start[1] + k_y * (j / (N-1))
+                 z_k = NBI_Points_start[2] + k_z * (j / (N-1))
                  
                  
                  
@@ -578,7 +456,16 @@ class Data:
                  Z_point_on_NBI = np.append(Z_point_on_NBI, z_k)
 
          NBI_points = np.array([X_point_on_NBI, Y_point_on_NBI, Z_point_on_NBI])
-         return NBI_points 
+         return NBI_points
+
+    def find_point_on_NBI(self, Array_points_on_selected_NBI_and_Port, NBI_points, index_NBI):
+        NBI_seected_points = [[],[],[]]
+        for i in range(len(Array_points_on_selected_NBI_and_Port)):
+            j = int(Array_points_on_selected_NBI_and_Port[i])
+            NBI_seected_points[0].append(NBI_points[0][index_NBI][j])
+            NBI_seected_points[1].append(NBI_points[1][index_NBI][j])
+            NBI_seected_points[2].append(NBI_points[2][index_NBI][j])
+        return NBI_seected_points
     
 def angle_between_vectors(vector1, vector2):
     dot_product = sum(a * b for a, b in zip(vector1, vector2))
@@ -592,7 +479,6 @@ def angle_between_vectors(vector1, vector2):
     angle_in_degrees = math.degrees(angle_in_radians)
 
     return angle_in_degrees
-
 
 if __name__ == "__main__":
     app = App()

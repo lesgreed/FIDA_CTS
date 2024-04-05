@@ -96,34 +96,21 @@ def prob_sigma(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radia
 
 
 
-def prob_st(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B, cross_V_val):
+def prob_st(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B):
         
      #v_parallel and v_perp      
     
      v_parallel = np.sqrt(np.abs(2 * (x - B * np.abs(y)) / m)) * np.sign(y)
      v_perp = np.sqrt(np.abs(2 * B * np.abs(y) / m))
-     
-     
-     
-    
-
-     
-     
-
-
-        
-     rez = prob_pi(v_parallel, v_perp,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B) + prob_sigma(v_parallel, v_perp,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B)
-
- 
-     
-     
+      
+     rez = prob_pi(v_parallel, v_perp,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B) + prob_sigma(v_parallel, v_perp,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B) 
      rez = np.where(rez >= 0, rez, 0)
      rez = np.nan_to_num(rez)
 
      return rez
 
 
-def weight_Function(phi, B, x, y, cross_V):
+def weight_Function(phi, B, x, y):
     phi_radian =  np.pi - np.pi*phi/180
     
     # constant 
@@ -162,7 +149,7 @@ def weight_Function(phi, B, x, y, cross_V):
        
     x, y = np.meshgrid(x, y)
     
-    result = np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B,cross_V ), 0) + np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_3, lambda_4, c,phi_radian, B,cross_V ), 0)
+    result = np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B ), 0) + np.where(x>=np.abs(y)*B, prob_st(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_3, lambda_4, c,phi_radian, B ), 0)
     
     return result
 
