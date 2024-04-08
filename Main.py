@@ -207,13 +207,13 @@ class App(ctk.CTk):
          #Obtain_result_of_WF
          if Dia =="FIDA":
 
-            x_ev = np.linspace(10, 100, 100)
-            y_ev = np.linspace(-100, 100, 100)/B[i]
+            x_ev = np.linspace(10, 100, 150)
+            y_ev = np.linspace(-100, 100, 150)/B[i]
             result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev)
             Result_for_NBI_Port_new.append(result)
          if Dia =="CTS":
-            x_ev = np.linspace(1, 6, 100)
-            y_ev = np.linspace(-6, 6, 100)/B[i]
+            x_ev = np.linspace(1, 6, 150)
+            y_ev = np.linspace(-6, 6, 150)/B[i]
             result = WF.CTS_wf(Angle[i], B[i], x_ev, y_ev)   
             Result_for_NBI_Port_new.append(result)
         #print("len(Result) = ",len(Result_for_NBI_Port_new))
