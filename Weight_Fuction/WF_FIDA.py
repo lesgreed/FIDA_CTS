@@ -163,8 +163,12 @@ def CTS_wf(phi, B, x, y):
    phi_radian =   np.pi*phi/180
 
    # u input
-   u1 = -0.1*10**6
-   u2 =  0.1*10**6
+   u1 =  1.5*10**6
+   u2 =  4.5*10**6
+
+   u3 = -4.5*10**6
+   u4 = -1.5*10**6
+
    #mass of the hydrogen atom  in kg
    m = 3.3 * 10**(-27)
 
@@ -179,7 +183,7 @@ def CTS_wf(phi, B, x, y):
 
 
 
-   result = np.where(x>=np.abs(y)*B,CTS_WF_real(B, x, y, m, u1, u2, phi_radian), 0)
+   result = np.where(x>=np.abs(y)*B,CTS_WF_real(B, x, y, m, u1, u2, phi_radian), 0) + np.where(x>=np.abs(y)*B,CTS_WF_real(B, x, y, m, u3, u4, phi_radian), 0)
    result = np.nan_to_num(result)
    return result
 
