@@ -200,12 +200,12 @@ def WF_CTS(x,y,u1, u2, phi_radian):
 
     #gyroangle_1
     arg_1 = (u1 - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
-    arg_1_1 = np.where((arg_1 >= -1) & (arg_1 <= 1), arg_1, np.nan)
+    arg_1_1 = np.where(arg_1 <= -1, -1, np.where(arg_1 >= 1, 1, arg_1))
 
 
     #gyroangle_1
     arg_2 = (u2 - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
-    arg_2_2 = np.where((arg_2 >= -1) & (arg_2 <= 1), arg_2, np.nan)
+    arg_2_2 = np.where(arg_2 <= -1, -1, np.where(arg_2 >= 1, 1, arg_2))
 
 
 
@@ -217,7 +217,7 @@ def WF_CTS(x,y,u1, u2, phi_radian):
 
     rez = 1/np.pi * (gyroangle_1_l - gyroangle_2_l)
 
-    result = np.where(rez >= 0, rez, np.nan)
+    result = np.where(rez >= 0, rez, 0)
     
 
     return result

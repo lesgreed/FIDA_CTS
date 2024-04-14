@@ -207,13 +207,13 @@ class App(ctk.CTk):
          #Obtain_result_of_WF
          if Dia =="FIDA":
 
-            x_ev = np.linspace(10, 100, 150)
-            y_ev = np.linspace(-100, 100, 150)/B[i]
+            x_ev = np.linspace(10, 100, 100)
+            y_ev = np.linspace(-100, 100, 100)/B[i]
             result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev)
             Result_for_NBI_Port_new.append(result)
          if Dia =="CTS":
-            x_ev = np.linspace(1, 6, 150)
-            y_ev = np.linspace(-6, 6, 150)/B[i]
+            x_ev = np.linspace(10, 100, 100)
+            y_ev = np.linspace(-100, 100, 100)/B[i]
             result = WF.CTS_wf(Angle[i], B[i], x_ev, y_ev)   
             Result_for_NBI_Port_new.append(result)
         #print("len(Result) = ",len(Result_for_NBI_Port_new))
@@ -280,6 +280,7 @@ class App(ctk.CTk):
         
     def draw_graph_on_canvas(self, Result_for_NBI_Port):
         num_arrays = len(Result_for_NBI_Port)
+        color = np.array([])
             
         # Create a matplotlib figure
         fig, axs = plt.subplots(num_arrays, num_arrays, figsize=(8, 8))
@@ -296,8 +297,13 @@ class App(ctk.CTk):
 
                 MATRIX = self.suummmm(Result_for_NBI_Port[i], Result_for_NBI_Port[j])
                 min_value = np.min(MATRIX)
-                max_value = np.max(MATRIX)
-                im = axs[i, j].imshow(MATRIX, cmap='jet', origin='upper', aspect='auto', vmin=0, vmax=1.0)
+                color = np.append(color, min_value)
+         for i in range(num_arrays):
+            for j in range(num_arrays):
+
+                MATRIX = self.suummmm(Result_for_NBI_Port[i], Result_for_NBI_Port[j])
+                im = axs[i, j].imshow(MATRIX, cmap='jet', origin='upper', aspect='auto', vmin=np.min(color), vmax=1.0)
+
                 axs[i, j].set_xticks([])
                 axs[i, j].set_yticks([])
 
@@ -306,6 +312,7 @@ class App(ctk.CTk):
         
         # Add colorbar to the last subplot
         cax = fig.add_axes([0.93, 0.15, 0.02, 0.7])  # [x, y, width, height]
+        
         plt.colorbar(im, cax=cax)
 
 
@@ -347,6 +354,7 @@ class App(ctk.CTk):
             for i in range(len(array_1)):
                 for j in range(len(array_2)):
                     MATRIX[i, j] = np.sum(array_1[i] * array_2[j])
+            print(np.max(MATRIX))
             MATRIX = MATRIX/np.max(MATRIX)
 
             return MATRIX
