@@ -13,40 +13,42 @@ def prob_pi(x, y, s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radian, B
  for i, s in enumerate(s_l):                                                                 #i is index element, and s is value of the element
      if i in [0, 3, 4, 5, 9, 10, 11, 14]:
 
-               #numerator_1
-       arg1_l = c * (lambda_1 / (lambda_0 + s_l[i] * y * B) - 1) - x * np.cos(phi_radian)
-
-       #denominator
-       denominator = y * np.sin(phi_radian)
-
-       arg_1_l = arg1_l / denominator
-       arg_1_l = np.where((arg_1_l >= -1) & (arg_1_l <= 1), arg_1_l, np.nan)
-
-
-
-       #numerator_2
-       arg2_l = c * (lambda_2 / (lambda_0 + s_l[i] * y * B) - 1) - x * np.cos(phi_radian)
-
-       #argument inside arccos
-       arg_2_l = arg2_l / denominator
+       lambda_one = (((y * np.sin(phi_radian)) + x * np.cos(phi_radian))/c + 1 ) *(lambda_0 + s_l[i] * y * B)
+       lambda_m_one = ((-(y * np.sin(phi_radian)) + x * np.cos(phi_radian))/c + 1 ) *(lambda_0 + s_l[i] * y * B)
+           
+       if np.any(lambda_m_one>lambda_one):
+        lambda_up = np.where((lambda_m_one>lambda_2) & (lambda_one<lambda_2), lambda_2, np.where((lambda_m_one>lambda_2) & (lambda_one>lambda_2), np.nan, np.where((lambda_m_one<lambda_1) & (lambda_one<lambda_1), np.nan, lambda_m_one) ))
+        lambda_down =  np.where((lambda_m_one>lambda_1) & (lambda_one<lambda_1), lambda_1, np.where((lambda_m_one>lambda_2) & (lambda_one>lambda_2), np.nan, np.where((lambda_m_one<lambda_1) & (lambda_one<lambda_1), np.nan, lambda_one) ))
+       if np.any(lambda_m_one<lambda_one):
+        lambda_up = np.where((lambda_one>lambda_2) & (lambda_m_one<lambda_2), lambda_2, np.where((lambda_m_one>lambda_2) & (lambda_one>lambda_2), np.nan, np.where((lambda_m_one<lambda_1) & (lambda_one<lambda_1), np.nan, lambda_one) ))
+        lambda_down =  np.where((lambda_one>lambda_1) & (lambda_m_one<lambda_1), lambda_1, np.where((lambda_m_one>lambda_2) & (lambda_one>lambda_2), np.nan, np.where((lambda_m_one<lambda_1) & (lambda_one<lambda_1), np.nan, lambda_m_one) ))
+    
+       
 
 
+       #arg_1
+       arg1_l = (c * (lambda_down / (lambda_0 + s_l[i] * y * B) - 1) - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
+       arg1_l = np.where(np.isnan(arg1_l), np.nan, np.where(arg1_l <= -1, -1, np.where(arg1_l >= 1, 1, arg1_l)))
 
-       arg_2_l = np.where((arg_2_l >= -1) & (arg_2_l <= 1), arg_2_l, np.nan)
+
+
+
+       #arg_2
+       arg2_l = (c * (lambda_up / (lambda_0 + s_l[i] * y * B) - 1) - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
+       arg2_l = np.where(np.isnan(arg2_l), np.nan, np.where(arg2_l <= -1, -1, np.where(arg2_l >= 1, 1, arg2_l)))
 
        #gyroangle
-       gyroangle_1_l = np.arccos(arg_1_l)
-       gyroangle_2_l = np.arccos(arg_2_l)
+       gyroangle_1_l = np.arccos(arg1_l)
+       gyroangle_2_l = np.arccos(arg2_l)
 
        #gyroangle1 - gyroangle2
        minus= (gyroangle_1_l - gyroangle_2_l)/np.pi
 
 
-       #prob_func[i]
-       probabilities_pi_st = np.where((arg_1_l >= -1) & (arg_1_l <= 1) & (arg_2_l >= -1) & (arg_2_l <= 1), C_l[i] / C_f * ( minus - (np.sin(phi_radian)**2)/2 * ( minus - (np.sin(2 * gyroangle_1_l ) - np.sin(2 * gyroangle_2_l)) / (2 * np.pi))), 0)
+       probabilities_pi_st = C_l[i] / C_f * ( minus - (np.sin(phi_radian)**2)/2 * ( minus - (np.sin(2 * gyroangle_1_l ) - np.sin(2 * gyroangle_2_l)) / (2 * np.pi)))
+       probabilities_pi_st = np.nan_to_num(probabilities_pi_st)
 
        probabilities_pi += probabilities_pi_st
-
  return probabilities_pi
    
     
@@ -56,42 +58,45 @@ def prob_sigma(x, y,  s_l, C_l, C_f, m,lambda_0, lambda_1, lambda_2, c,phi_radia
  probabilities_sigma = np.zeros_like(y)
  for i, s in enumerate(s_l):
     if i in [1, 2, 6, 7, 8, 12, 13]:
-
-               #numerator_1
-       arg1_l = c * (lambda_1 / (lambda_0 + s_l[i] * y * B) - 1) - x * np.cos(phi_radian)
-
-       #denominator
-       denominator = y * np.sin(phi_radian)
-
-       arg_1_l = arg1_l / denominator
+       lambda_one = (((y * np.sin(phi_radian)) + x * np.cos(phi_radian))/c + 1 ) *(lambda_0 + s_l[i] * y * B)
+       lambda_m_one = ((-(y * np.sin(phi_radian)) + x * np.cos(phi_radian))/c + 1 ) *(lambda_0 + s_l[i] * y * B)
+           
+       if np.any(lambda_m_one>lambda_one):
+        lambda_up = np.where((lambda_m_one>lambda_2) & (lambda_one<lambda_2), lambda_2, np.where((lambda_m_one>lambda_2) & (lambda_one>lambda_2), np.nan, np.where((lambda_m_one<lambda_1) & (lambda_one<lambda_1), np.nan, lambda_m_one) ))
+        lambda_down =  np.where((lambda_m_one>lambda_1) & (lambda_one<lambda_1), lambda_1, np.where((lambda_m_one>lambda_2) & (lambda_one>lambda_2), np.nan, np.where((lambda_m_one<lambda_1) & (lambda_one<lambda_1), np.nan, lambda_one) ))
+       if np.any(lambda_m_one<lambda_one):
+        lambda_up = np.where((lambda_one>lambda_2) & (lambda_m_one<lambda_2), lambda_2, np.where((lambda_m_one>lambda_2) & (lambda_one>lambda_2), np.nan, np.where((lambda_m_one<lambda_1) & (lambda_one<lambda_1), np.nan, lambda_one) ))
+        lambda_down =  np.where((lambda_one>lambda_1) & (lambda_m_one<lambda_1), lambda_1, np.where((lambda_m_one>lambda_2) & (lambda_one>lambda_2), np.nan, np.where((lambda_m_one<lambda_1) & (lambda_one<lambda_1), np.nan, lambda_m_one) ))
+    
        
-       arg_1_l = np.where((arg_1_l >= -1) & (arg_1_l <= 1), arg_1_l, np.nan)
-       
 
 
-       #numerator_2
-       arg2_l = c * (lambda_2 / (lambda_0 + s_l[i] * y * B) - 1) - x * np.cos(phi_radian)
-
-       #argument inside arccos
-       arg_2_l = arg2_l / denominator
+       #arg_1
+       arg1_l = (c * (lambda_down / (lambda_0 + s_l[i] * y * B) - 1) - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
+       arg1_l = np.where(np.isnan(arg1_l), np.nan, np.where(arg1_l <= -1, -1, np.where(arg1_l >= 1, 1, arg1_l)))
 
 
 
-       arg_2_l = np.where((arg_2_l >= -1) & (arg_2_l <= 1), arg_2_l, np.nan)
+
+       #arg_2
+       arg2_l = (c * (lambda_up / (lambda_0 + s_l[i] * y * B) - 1) - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
+       arg2_l = np.where(np.isnan(arg2_l), np.nan, np.where(arg2_l <= -1, -1, np.where(arg2_l >= 1, 1, arg2_l)))
 
        #gyroangle
-       gyroangle_1_l = np.arccos(arg_1_l)
-       gyroangle_2_l = np.arccos(arg_2_l)
+       gyroangle_1_l = np.arccos(arg1_l)
+       gyroangle_2_l = np.arccos(arg2_l)
 
        #gyroangle1 - gyroangle2
        minus= (gyroangle_1_l - gyroangle_2_l)/np.pi
 
 
-       #prob_func[i]
-       probabilities_sigma += np.where((arg_1_l >= -1) & (arg_1_l <= 1) & (arg_2_l >= -1) & (arg_2_l <= 1), C_l[i] / C_f * ( minus + (np.sin(phi_radian)**2)/2 * ( minus - (np.sin(2 * gyroangle_1_l ) - np.sin(2 * gyroangle_2_l)) / (2 * np.pi))), 0)
+       probabilities_sigma_st = C_l[i] / C_f * ( minus + (np.sin(phi_radian)**2)/2 * ( minus - (np.sin(2 * gyroangle_1_l ) - np.sin(2 * gyroangle_2_l)) / (2 * np.pi)))
+       probabilities_sigma_st = np.nan_to_num(probabilities_sigma_st)
 
+       probabilities_sigma += probabilities_sigma_st
 
  return probabilities_sigma
+
 
 
 
@@ -125,7 +130,7 @@ def weight_Function(phi, B, x, y):
     
     
     #mass of the hydrogen atom  in kg 
-    m = 3.3 * 10**(-27) 
+    m = 1.65 * 10**(-27) 
     
    
     
@@ -160,7 +165,7 @@ def weight_Function(phi, B, x, y):
 
 
 def CTS_wf(phi, B, x, y):
-   phi_radian =   np.pi*phi/180
+   phi_radian =   np.radians(phi)
 
    # u input
    u1 =  1.5*10**6
@@ -170,10 +175,7 @@ def CTS_wf(phi, B, x, y):
    u4 = -1.5*10**6
 
    #mass of the hydrogen atom  in kg
-   m = 3.3 * 10**(-27)
-
-
-   
+   m = 1.65 * 10**(-27)
 
 
    x = x*(1.6*10**(-19))*10**3
@@ -181,10 +183,8 @@ def CTS_wf(phi, B, x, y):
    x, y = np.meshgrid(x, y)
 
 
-
-
    result = np.where(x>=np.abs(y)*B,CTS_WF_real(B, x, y, m, u1, u2, phi_radian), 0) + np.where(x>=np.abs(y)*B,CTS_WF_real(B, x, y, m, u3, u4, phi_radian), 0)
-   result = np.nan_to_num(result)
+
    return result
 
 
@@ -193,35 +193,45 @@ def CTS_wf(phi, B, x, y):
 def CTS_WF_real(B, x, y, m, u1, u2, phi_radian):
     v_parallel = np.sqrt(np.abs(2 * (x - B * np.abs(y)) / m)) * np.sign(y)
     v_perp = np.sqrt(np.abs(2 * B * np.abs(y) / m))
-    rez = WF_CTS(v_parallel,v_perp,u1, u2, phi_radian)
+    rez = np.where(v_perp!=0, WF_CTS(v_parallel,v_perp,u1, u2, phi_radian), 0)
     return rez
 
 def WF_CTS(x,y,u1, u2, phi_radian):
+    u_1 = np.round((y * np.sin(phi_radian) + x * np.cos(phi_radian)),1)
+    u_m1 =  np.round((x * np.cos(phi_radian) -(y * np.sin(phi_radian))),1)
+    if np.any(u_1>u_m1):
+       u_up = np.where((u_1>u2) & (u_m1<u2), u2, np.where((u_1>u2) & (u_m1>u2), np.nan, np.where((u_1<u1) & (u_m1<u1), np.nan, u_1) ))
+       u_down =  np.where((u_1>u1) & (u_m1<u1), u1, np.where((u_1>u2) & (u_m1>u2), np.nan, np.where((u_1<u1) & (u_m1<u1), np.nan, u_m1) ))
+    if np.any(u_1<u_m1):
+       u_up = np.where((u_m1>u2) & (u_1<u2), u2, np.where((u_1>u2) & (u_m1>u2), np.nan, np.where((u_1<u1) & (u_m1<u1), np.nan, u_m1) ))
+       u_down =  np.where((u_m1>u1) & (u_1<u1), u1, np.where((u_1>u2) & (u_m1>u2), np.nan, np.where((u_1<u1) & (u_m1<u1), np.nan, u_1) ))
+    
 
     #gyroangle_1
-    arg_1 = (u1 - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
+    arg_1 = (u_down - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
+
+
+
     arg_1_1 = np.where(arg_1 <= -1, -1, np.where(arg_1 >= 1, 1, arg_1))
 
 
     #gyroangle_1
-    arg_2 = (u2 - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
-    arg_2_2 = np.where(arg_2 <= -1, -1, np.where(arg_2 >= 1, 1, arg_2))
+    arg_2 = (u_up - x * np.cos(phi_radian))/(y * np.sin(phi_radian))
 
+    arg_2_2 =  np.where(arg_2 <= -1, -1, np.where(arg_2 >= 1, 1, arg_2))
+    #print(arg_2_2)
 
 
     #gyroangle
     gyroangle_1_l = np.arccos(arg_1_1)
     gyroangle_2_l = np.arccos(arg_2_2)
 
-
-
     rez = 1/np.pi * (gyroangle_1_l - gyroangle_2_l)
 
-    result = np.where(rez >= 0, rez, 0)
     
-
-    return result
-    
+    rez = np.nan_to_num(rez)
+    #result = np.where(rez >= 0, rez, 0)
+    return rez
    
 
    

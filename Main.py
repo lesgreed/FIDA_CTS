@@ -281,31 +281,26 @@ class App(ctk.CTk):
     def draw_graph_on_canvas(self, Result_for_NBI_Port):
         num_arrays = len(Result_for_NBI_Port)
         color = np.array([])
+        Matr= np.empty((num_arrays, num_arrays), dtype=object)
             
         # Create a matplotlib figure
         fig, axs = plt.subplots(num_arrays, num_arrays, figsize=(8, 8))
-        if num_arrays == 1:
-         MATRIX = self.suummmm(Result_for_NBI_Port[0], Result_for_NBI_Port[0])
-         #min_value = np.min(MATRIX)
-         #max_value = np.max(MATRIX)
-         im = axs.imshow(MATRIX, cmap='jet', origin='upper', aspect='auto', vmin=0.0, vmax=1.0)
-         axs.set_xticks([])
-         axs.set_yticks([])
-        else:
-         for i in range(num_arrays):
+
+        for i in range(num_arrays):
+            for j in range(num_arrays):
+                 MATRIX = self.suummmm(Result_for_NBI_Port[i], Result_for_NBI_Port[j])
+                 min_value = np.min(MATRIX)
+                 color = np.append(color, min_value)
+                 Matr[i, j]  = MATRIX
+        for i in range(num_arrays):
             for j in range(num_arrays):
 
-                MATRIX = self.suummmm(Result_for_NBI_Port[i], Result_for_NBI_Port[j])
-                min_value = np.min(MATRIX)
-                color = np.append(color, min_value)
-         for i in range(num_arrays):
-            for j in range(num_arrays):
-
-                MATRIX = self.suummmm(Result_for_NBI_Port[i], Result_for_NBI_Port[j])
-                im = axs[i, j].imshow(MATRIX, cmap='jet', origin='upper', aspect='auto', vmin=np.min(color), vmax=1.0)
+                One_Matr = Matr[i, j] 
+                im = axs[i, j].imshow(One_Matr, cmap='jet', origin='upper', aspect='auto', vmin=np.min(color), vmax=1.0)
 
                 axs[i, j].set_xticks([])
                 axs[i, j].set_yticks([])
+            print(i)
 
         plt.subplots_adjust(wspace=0, hspace=0)
         
@@ -354,7 +349,7 @@ class App(ctk.CTk):
             for i in range(len(array_1)):
                 for j in range(len(array_2)):
                     MATRIX[i, j] = np.sum(array_1[i] * array_2[j])
-            print(np.max(MATRIX))
+                    
             MATRIX = MATRIX/np.max(MATRIX)
 
             return MATRIX
@@ -387,7 +382,7 @@ class Data:
         NBI_Points_start = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])]]      
         NBI_Points_end = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])]]
         NBI_seected_points = self.Points_on_NBI(NBI_Points_start, NBI_Points_end, 103)
-        
+
         #Ports_input_P_2
         
         Point_p_2 = (P_2_new[0][index_Port_in_general], P_2_new[1][index_Port_in_general], P_2_new[2][index_Port_in_general])
