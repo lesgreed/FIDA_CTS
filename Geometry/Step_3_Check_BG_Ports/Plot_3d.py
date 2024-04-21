@@ -13,7 +13,7 @@ def plot_3d(R_x_all, R_y_all, Z_all, P_1, P_2_new, Good_Ports, NBI_start, NBI_en
     ax = fig.add_subplot(111, projection='3d')
     i=0
     while i<=360:
-       ax.plot(R_x_all[i], R_y_all[i], Z_all[i], marker='o', linestyle='-', alpha=0.5, markersize=1)
+       ax.plot(R_x_all[i], R_y_all[i], Z_all[i], marker='o', linestyle='-', alpha=0.2, markersize=1)
        #ax.scatter(R_x_all[i], R_y_all[i], Z_all[i], alpha=0.1, s=10)
 
        i=i+5
@@ -24,9 +24,17 @@ def plot_3d(R_x_all, R_y_all, Z_all, P_1, P_2_new, Good_Ports, NBI_start, NBI_en
      #  ax.plot([P_1[0][j], P_2_new[0][j]], [P_1[1][j], P_2_new[1][j]], [P_1[2][j], P_2_new[2][j]],  color='blue')
      #  ax.scatter(P_1[0][j], P_1[1][j], P_1[2][j],  color='red', s=10, marker='o')
     
-    for j in range(len(NBI_start[0])):
-       ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='blue')
+   # for j in range(len(NBI_start[0])):
+  #     ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='blue', linewidth=2)
+  #     ax.scatter(NBI_start[0][j], NBI_start[1][j], NBI_start[2][j],  color='red', s=10, marker='o')
+    for j in range(8):
+       ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='blue', linewidth=2)
        ax.scatter(NBI_start[0][j], NBI_start[1][j], NBI_start[2][j],  color='red', s=10, marker='o')
+    for j in range(3):
+       j=j+8
+       ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='green', linewidth=2)
+       ax.scatter(NBI_start[0][j], NBI_start[1][j], NBI_start[2][j],  color='red', s=10, marker='o')
+        
         
     
     
@@ -77,10 +85,10 @@ def plot_3d(R_x_all, R_y_all, Z_all, P_1, P_2_new, Good_Ports, NBI_start, NBI_en
       #ax.plot(R_x_list_1, R_y_list_1, Z_list_1,  marker='o', color='red', linestyle='-', alpha=0.5, markersize=1)
     
 
-    ax.set_xlabel('R_x')
-    ax.set_ylabel('R_y')
-    ax.set_zlabel('Z')
-    ax.set_title('3D Plot with Contour Lines')
+    ax.set_xlabel('X[cm]')
+    ax.set_ylabel('Y[cm]')
+    ax.set_zlabel('Z[cm]')
+    ax.set_title("WX-7 S-model NBIs and Gyrotron's")
     
     
     
