@@ -3,7 +3,9 @@ import os
 
 
 #Read_data_in_file "/FIDA/Geometry/Input_data/data.txt" 
-def read_data(filename):
+def read_data():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(current_dir, 'data.txt')
     Phi, R_phi, Z_phi = [], [], []
     current_block_R, current_block_Z = [], []
 
@@ -84,7 +86,7 @@ def calculate_3d_data(R_phi_3, Z_phi_3, target_angle):
 #All points of the machine in XYZ coordinate 
 def all_point(Phi):
 
-    Phi, R_phi, Z_phi = read_data('data.txt')
+    Phi, R_phi, Z_phi = read_data()
     target_angle = 0
     R_x_all, R_y_all, Z_all = [], [], [] 
     while target_angle <= 360:

@@ -3,6 +3,7 @@ import coordinate_output_NBI_and_ports as Cout
 import Plot_3d as pl3d
 import Ports_and_point_on_line_NBI as Port
 from openpyxl import Workbook
+import os
 
 
 
@@ -26,14 +27,15 @@ def write_data_to_excel(output_sheet, headers, data):
 if __name__ == "__main__":
 
 #Create Full DATA poinst in XYZ coordinate
-    Phi, R_phi, Z_phi = FuD.read_data('Tools/data.txt')
+    Phi, R_phi, Z_phi = FuD.read_data()
     R_x_all, R_y_all, Z_all = FuD.all_point(Phi)
     
     
     
 #Downnload Input data of coordinates ports and NBI
-    NBI_X, NBI_Y, NBI_Z, NBI_uvec_X, NBI_uvec_Y, NBI_uvec_Z,  X_start, Y_start, Z_start, X_last, Y_last, Z_last = Cout.NBI()
+    NBI_X, NBI_Y, NBI_Z, NBI_uvec_X, NBI_uvec_Y, NBI_uvec_Z = Cout.NBI()
     P_1, P_2, P_3, P_unit_vector = Cout.Ports()   
+    #P = P_1 + (P_2-P_1)/3
     
     
 #Find new P_2 points     
@@ -52,7 +54,9 @@ if __name__ == "__main__":
     output_sheet = write_data_to_excel(output_sheet, headers, data)
 
 # Save the workbook
-    output_file_path = 'Result/New_coordinate_step_1.xlsx'
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    output_dir = os.path.join(current_dir, 'Result')
+    output_file_path = os.path.join(output_dir, 'New_coordinate_step_1_test_21.04.xlsx') 
     workbook.save(output_file_path)
 
 

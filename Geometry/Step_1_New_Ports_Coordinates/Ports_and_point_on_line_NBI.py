@@ -7,13 +7,13 @@ import Step_line as StL
 
 
 #Create Full DATA poinst in XYZ coordinate
-Phi, R_phi, Z_phi = FuD.read_data('Tools/data.txt')
+Phi, R_phi, Z_phi = FuD.read_data()
 R_x_all, R_y_all, Z_all = FuD.all_point(Phi)
 
 
 #Download data coordinates of ports and NBIs
 P_1, P_2, P_3, P_unit_vector = Cout.Ports()   
-NBI_X, NBI_Y, NBI_Z, NBI_uvec_X, NBI_uvec_Y, NBI_uvec_Z,  X_start, Y_start, Z_start, X_last, Y_last, Z_last = Cout.NBI()
+NBI_X, NBI_Y, NBI_Z, NBI_uvec_X, NBI_uvec_Y, NBI_uvec_Z = Cout.NBI()
 
 
 

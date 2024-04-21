@@ -26,7 +26,7 @@ def to_normal_translate_coordinates(x_1, y_1):
 
 #Find_min_distance 
 def find_min_disnace(R_1 , Phi_1, z_1):
-       Phi, R_phi, Z_phi = FuD.read_data("data.txt")
+       Phi, R_phi, Z_phi = FuD.read_data()
        R_phi_3, Z_phi_3, R_phi_1, Z_phi_1, R_phi_2, Z_phi_2 = FuD.data_for_our_angle(R_phi, Z_phi, Phi_1, Phi)
        point_0 = np.array([R_1, z_1])
        min_distance = find_mindistance_to_segments( point_0, R_phi_3, Z_phi_3) 
