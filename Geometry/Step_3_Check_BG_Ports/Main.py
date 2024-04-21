@@ -30,32 +30,32 @@ if __name__ == "__main__":
     R_x_all, R_y_all, Z_all = FuD.all_point(Phi)
     
 #Downnload Input data of coordinates ports and NBI
-    P_1_new, P_2_new = [],[]#Cout.new_Ports()
-    NBI_start, NBI_end =[],[] #Cout.new_NBI()
+    P_1_new, P_2_new = Cout.new_Ports()
+    NBI_start, NBI_end =Cout.new_NBI()
     
 #Check BG ports     
-    Good_Ports = Ch.check()
+    #Good_Ports = Ch.check()
     
     
     
 # Define your data
-    headers = ["Good_Ports_Nubmer_Ports", "Good_Ports_Nubmer_NBI"]
-    data = [Good_Ports[0][0], Good_Ports[0][1]]
+    #headers = ["Good_Ports_Nubmer_Ports", "Good_Ports_Nubmer_NBI"]
+    #data = [Good_Ports[0][0], Good_Ports[0][1]]
 
 # Create a new Excel workbook and sheet
-    workbook = Workbook()
-    output_sheet = workbook.active
+    #workbook = Workbook()
+    #output_sheet = workbook.active
 
 # Write each data array to a separate column
-    output_sheet = write_data_to_excel(output_sheet, headers, data)
+    #output_sheet = write_data_to_excel(output_sheet, headers, data)
 
 # Save the workbook
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(current_dir, 'Result_BG_Ports')
-    output_file_path = os.path.join(output_dir, 'Number_Good_Ports_and_NBI_14_03.xlsx') 
-    workbook.save(output_file_path)
+    #current_dir = os.path.dirname(os.path.abspath(__file__))
+    #output_dir = os.path.join(current_dir, 'Result_BG_Ports')
+    #output_file_path = os.path.join(output_dir, 'Number_Good_Ports_and_NBI_14_03.xlsx') 
+    #workbook.save(output_file_path)
 
 
 
 #Check with graph 
-    pl3d.plot_3d(R_x_all, R_y_all, Z_all, P_1_new, P_2_new, Good_Ports, NBI_start, NBI_end)    
+    pl3d.plot_3d(R_x_all, R_y_all, Z_all, P_1_new, P_2_new, 0, NBI_start, NBI_end)    

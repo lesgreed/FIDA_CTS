@@ -1,7 +1,5 @@
 import numpy as np
 import os
-current_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(current_dir, 'Tools', 'data.txt')
 
 #Read_data_in_file "/FIDA/Geometry/Input_data/data.txt" 
 def read_data(x):
