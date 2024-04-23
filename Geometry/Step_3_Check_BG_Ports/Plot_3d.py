@@ -19,21 +19,21 @@ def plot_3d(R_x_all, R_y_all, Z_all, P_1, P_2_new, Good_Ports, NBI_start, NBI_en
        i=i+5
 
     #Points_line_NBI
-    #for j in Good_Ports[0][0]:
-     #  j = int(j-1)
-     #  ax.plot([P_1[0][j], P_2_new[0][j]], [P_1[1][j], P_2_new[1][j]], [P_1[2][j], P_2_new[2][j]],  color='blue')
-     #  ax.scatter(P_1[0][j], P_1[1][j], P_1[2][j],  color='red', s=10, marker='o')
+    for j in Good_Ports[0][0]:
+       j = int(j-1)
+       ax.plot([P_1[0][j], P_2_new[0][j]], [P_1[1][j], P_2_new[1][j]], [P_1[2][j], P_2_new[2][j]],  color='blue')
+       ax.scatter(P_1[0][j], P_1[1][j], P_1[2][j],  color='red', s=10, marker='o')
     
-   # for j in range(len(NBI_start[0])):
-  #     ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='blue', linewidth=2)
-  #     ax.scatter(NBI_start[0][j], NBI_start[1][j], NBI_start[2][j],  color='red', s=10, marker='o')
-    for j in range(8):
+    for j in range(len(NBI_start[0])):
        ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='blue', linewidth=2)
        ax.scatter(NBI_start[0][j], NBI_start[1][j], NBI_start[2][j],  color='red', s=10, marker='o')
-    for j in range(3):
-       j=j+8
-       ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='green', linewidth=2)
-       ax.scatter(NBI_start[0][j], NBI_start[1][j], NBI_start[2][j],  color='red', s=10, marker='o')
+    #for j in range(8):
+    #   ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='blue', linewidth=2)
+    #   ax.scatter(NBI_start[0][j], NBI_start[1][j], NBI_start[2][j],  color='red', s=10, marker='o')
+    #for j in range(3):
+    #   j=j+8
+    #   ax.plot([NBI_start[0][j], NBI_end[0][j]], [NBI_start[1][j], NBI_end[1][j]], [NBI_start[2][j], NBI_end[2][j]],  color='green', linewidth=2)
+    #   ax.scatter(NBI_start[0][j], NBI_start[1][j], NBI_start[2][j],  color='red', s=10, marker='o')
         
         
     
