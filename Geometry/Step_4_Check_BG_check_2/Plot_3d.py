@@ -16,13 +16,13 @@ def plot_3d(R_x_all, R_y_all, Z_all, P_1, P_2_new, NBI_start, NBI_end, Good_PN) 
        ax.plot(R_x_all[i], R_y_all[i], Z_all[i], marker='o', linestyle='-', alpha=0.2, markersize=1)
        #ax.scatter(R_x_all[i], R_y_all[i], Z_all[i], alpha=0.1, s=10)
        i=i+5
-    P_2_new = P_1 + (P_2_new-P_1)/3
+
     #Points_line_NBI
     for j in Good_PN[0]:
        #if j==j-1:
        #     continue 
        j = int(j-1)
-       ax.plot([P_1[0][j], P_2_new[0][j]], [P_1[1][j], P_2_new[1][j]], [P_1[2][j], P_2_new[2][j]],  color='blue', linewidth=0.8)
+       ax.plot([P_1[0][j], P_2_new[0][j]], [P_1[1][j], P_2_new[1][j]], [P_1[2][j], P_2_new[2][j]],  color='blue', linewidth=0.6)
        ax.scatter(P_1[0][j], P_1[1][j], P_1[2][j],  color='red', s=10, marker='o')
     
     for j in range(len(NBI_start[0])):

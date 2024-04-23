@@ -89,9 +89,9 @@ def Ports_to_point_on_line_NBI_abgle(NBI_points, Good_PN):
         
         
         
-         x_1 = P_2_new[0][Number_ports ] + 2*k_x/( np.sqrt(k_x**2 + k_y**2 + k_z**2))
-         y_1 = P_2_new[1][Number_ports ] + 2*k_y/( np.sqrt(k_x**2 + k_y**2 + k_z**2))
-         z_1 = P_2_new[2][Number_ports ] + 2*k_z/( np.sqrt(k_x**2 + k_y**2 + k_z**2))
+         x_1 = P_2_new[0][Number_ports ] + 4*k_x/( np.sqrt(k_x**2 + k_y**2 + k_z**2))
+         y_1 = P_2_new[1][Number_ports ] + 4*k_y/( np.sqrt(k_x**2 + k_y**2 + k_z**2))
+         z_1 = P_2_new[2][Number_ports ] + 4*k_z/( np.sqrt(k_x**2 + k_y**2 + k_z**2))
 
          
          l_ka = step_for_ports(x_1, y_1, z_1, X_point_on_NBI[Number_NBI][j], Y_point_on_NBI[Number_NBI][j], Z_point_on_NBI[Number_NBI][j], k_x, k_y, k_z)
@@ -113,10 +113,12 @@ def Ports_to_point_on_line_NBI_abgle(NBI_points, Good_PN):
              
              angle = angle_between_vectors(un_Ports, un_Port_to_NBI)
              
-             if angle > 80:
+             if angle > 85:
                  l=0
-             else:
-                 l=1
+             if angle<=85 and angle>=60:
+                 l=0.9
+             if angle<=60:  
+                l = 1
          else:
               l=0
          Line.append(l)
@@ -160,15 +162,17 @@ def step_for_ports(x_0, y_0, z_0, x_1, y_1, z_1, dx, dy, dz):
               
               while not p == 10000:
 
-                if min_distance <= 0.1:
+                if min_distance <= 0.2:
                     break
                 if min_distance >= 30:
-                    dp  = 40
-                if min_distance > 15 and  min_distance < 30:
                     dp  = 20
-                if min_distance > 2 and min_distance <= 15:
+                if min_distance > 15 and  min_distance < 30:
                     dp  = 10
-                if min_distance > 0.1 and min_distance <=  2: 
+                if min_distance > 2 and min_distance <= 15:
+                    dp  = 5
+                if min_distance > 1 and min_distance <= 2:
+                    dp  = 2
+                if min_distance > 0.2 and min_distance <=  1: 
                     dp  = 1
                 if p >=9900: 
                     dp = 1
@@ -176,8 +180,8 @@ def step_for_ports(x_0, y_0, z_0, x_1, y_1, z_1, dx, dy, dz):
                 
                 p = p + dp
                 x_step, y_step, z_step = real_step(x_0, y_0, z_0, x_1, y_1, z_1,p)
-                R_1 , Phi_1 = tool.translate_coordinates(x_step, y_step)
-                min_distance = tool.find_min_disnace(R_1 , Phi_1,  z_step)
+                R_1_1_1 , Phi_1 = tool.translate_coordinates(x_step, y_step)
+                min_distance = tool.find_min_disnace(R_1_1_1 , Phi_1,  z_step)
               print("p =", p)
               if p == 10000: 
                  local = 1

@@ -36,14 +36,14 @@ def points_on_line_NBI():
         k_z = (NBI_end[2][i] - NBI_start[2][i])
 
 
-        for j in range(20):
+        for j in range(21):
 
             x_k = NBI_start[0][i] + k_x * (j / 20)
             y_k = NBI_start[1][i] + k_y * (j / 20)
             z_k = NBI_start[2][i] + k_z * (j / 20)
             
             
-            if j !=0 and j != 19:
+            if j !=0 and j != 20:
              X_point_on_NBI[i] = np.append(X_point_on_NBI[i], x_k)
              Y_point_on_NBI[i] = np.append(Y_point_on_NBI[i], y_k)
              Z_point_on_NBI[i] = np.append(Z_point_on_NBI[i], z_k)
@@ -94,7 +94,7 @@ def Ports_to_point_on_line_NBI(NBI_points):
               
               l = step_for_ports(x_1, y_1, z_1, X_point_on_NBI[k][j], Y_point_on_NBI[k][j], Z_point_on_NBI[k][j], k_x, k_y, k_z)
               kawai = kawai + l
-              if j == 9 or j==8:
+              if j ==10:
                   kawai = kawai + 2
               #print(kawai)
               
