@@ -109,7 +109,7 @@ def new_NBI():
 
 def result_angle_check():
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir,'..','Geometry','Step_4_Check_BG_check_2', 'Result_Angle', 'Number_Good_Ports_and_NBI_AND_INDEX_15_80.xlsx')
+    file_path = os.path.join(current_dir,'..','Geometry','Step_4_Check_BG_check_2', 'Result_Angle', 'Step_4_15_85_23.04.xlsx')
     df = pd.read_excel(file_path)
     
     Good_ports = df.iloc[4:, 4].tolist() #4 row 5 colum 

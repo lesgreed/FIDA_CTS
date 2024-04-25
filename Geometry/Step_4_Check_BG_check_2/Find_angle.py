@@ -115,9 +115,7 @@ def Ports_to_point_on_line_NBI_abgle(NBI_points, Good_PN):
              
              if angle > 85:
                  l=0
-             if angle<=85 and angle>=60:
-                 l=0.9
-             if angle<=60:  
+             else: 
                 l = 1
          else:
               l=0
@@ -162,7 +160,7 @@ def step_for_ports(x_0, y_0, z_0, x_1, y_1, z_1, dx, dy, dz):
               
               while not p == 10000:
 
-                if min_distance <= 0.2:
+                if min_distance <= 0.1:
                     break
                 if min_distance >= 30:
                     dp  = 20
@@ -172,7 +170,7 @@ def step_for_ports(x_0, y_0, z_0, x_1, y_1, z_1, dx, dy, dz):
                     dp  = 5
                 if min_distance > 1 and min_distance <= 2:
                     dp  = 2
-                if min_distance > 0.2 and min_distance <=  1: 
+                if min_distance > 0.1 and min_distance <=  1: 
                     dp  = 1
                 if p >=9900: 
                     dp = 1

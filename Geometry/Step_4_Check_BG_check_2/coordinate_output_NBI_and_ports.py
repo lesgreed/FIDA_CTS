@@ -93,7 +93,7 @@ def new_NBI():
 def good_ports_1():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(current_dir, '..', 'Step_3_Check_BG_Ports','Result_BG_Ports', 'Number_Good_Ports_and_NBI_14_03.xlsx')
-    # file_path = os.path.join(current_dir, '..', 'Step_4_Check_BG_check_2','Result_Angle', 'Number_Good_Ports_and_NBI_AND_INDEX_15_80.xlsx')
+    # file_path = os.path.join(current_dir, '..', 'Step_4_Check_BG_check_2','Result_Angle', 'Step_4_15_85_23.04.xlsx')
     df = pd.read_excel(file_path)
     
     # Good_Ports

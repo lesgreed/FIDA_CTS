@@ -43,7 +43,6 @@ if __name__ == "__main__":
     angle_NBI_port = Ch.angle()
 
     
-    
 # Define your data
     headers = ["Good_Ports_Nubmer_Ports", "Good_Ports_Nubmer_NBI", "Min_line_index", "Max_line_index"]
     data = [angle_NBI_port[0],angle_NBI_port[1], angle_NBI_port[2], angle_NBI_port[3]]
