@@ -207,13 +207,13 @@ class App(ctk.CTk):
          #Obtain_result_of_WF
          if Dia =="FIDA":
 
-            x_ev = np.linspace(10, 100, 100)
-            y_ev = np.linspace(-100, 100, 100)/B[i]
+            x_ev = np.linspace(10, 100, 150)
+            y_ev = np.linspace(-100, 100, 150)/2.5
             result = WF.weight_Function(Angle[i], B[i], x_ev, y_ev)
             Result_for_NBI_Port_new.append(result)
          if Dia =="CTS":
-            x_ev = np.linspace(10, 100, 100)
-            y_ev = np.linspace(-100, 100, 100)/B[i]
+            x_ev = np.linspace(10, 100, 150)
+            y_ev = np.linspace(-100, 100, 150)/2.5
             result = WF.CTS_wf(Angle[i], B[i], x_ev, y_ev)   
             Result_for_NBI_Port_new.append(result)
         #print("len(Result) = ",len(Result_for_NBI_Port_new))
@@ -296,7 +296,7 @@ class App(ctk.CTk):
             for j in range(num_arrays):
 
                 One_Matr = Matr[i, j] 
-                im = axs[i, j].imshow(One_Matr, cmap='jet', origin='upper', aspect='auto', vmin=np.min(color), vmax=1.0)
+                im = axs[i, j].imshow(One_Matr, cmap='Blues', origin='upper', aspect='auto', vmin=np.min(color), vmax=1.0)
 
                 axs[i, j].set_xticks([])
                 axs[i, j].set_yticks([])
@@ -381,7 +381,7 @@ class Data:
               
         NBI_Points_start = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])]]      
         NBI_Points_end = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])]]
-        NBI_seected_points = self.Points_on_NBI(NBI_Points_start, NBI_Points_end, 103)
+        NBI_seected_points = self.Points_on_NBI(NBI_Points_start, NBI_Points_end, 53)
 
         #Ports_input_P_2
         
