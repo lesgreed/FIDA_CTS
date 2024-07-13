@@ -358,111 +358,110 @@ class App(ctk.CTk):
 
 
 
+import numpy as np
+import math
+
 class Data:
     def class_data(self, selected_nbi, selected_port):
-        
-        #input data 
+        # Input data 
         Ports_For_NBI = Inp.NBI_and_Ports()
         
-        #input select
+        # Find indices for selected NBI and port
         index_NBI, index_Port = self.find_data(selected_nbi, selected_port, Ports_For_NBI)
         
-        #DATA
+        # Data initialization
         P_1, P_2_new = Inp.new_Ports()
         NBI_start, NBI_end = Inp.new_NBI()
         index_Port_in_general = int(Ports_For_NBI[index_NBI][3][index_Port])
 
-        
-        #NBI_data
+        # Get NBI points
         NBI_points = self.points_on_line_NBI(NBI_start, NBI_end)
         
+        # Determine start and end points for the selected port on the NBI
+        NBI_Points_start = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])],
+                            NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])],
+                            NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])]]
+        NBI_Points_end = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])],
+                          NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])],
+                          NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])]]
         
-        #Find Points_of_LIne
-              
-        NBI_Points_start = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][1][index_Port])]]      
-        NBI_Points_end = [NBI_points[0][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[1][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])], NBI_points[2][index_NBI][int(Ports_For_NBI[index_NBI][2][index_Port])]]
+        # Get intermediate points on the NBI segment
         NBI_seected_points = self.Points_on_NBI(NBI_Points_start, NBI_Points_end, 53)
 
-        #Ports_input_P_2
-        
+        # Get specific port point
         Point_p_2 = (P_2_new[0][index_Port_in_general], P_2_new[1][index_Port_in_general], P_2_new[2][index_Port_in_general])
     
         return NBI_seected_points, Point_p_2
 
     def find_data(self, selected_nbi, selected_port, Ports_For_NBI):
-        # Find index selected value
+        # Find index for selected NBI
         index_NBI = int(int(selected_nbi.split('_')[1]) - 1)
         if selected_nbi.startswith("CTS"):
-         index_NBI = index_NBI+8
+            index_NBI += 8
 
+        # Find index for selected port
         index_Port = Ports_For_NBI[index_NBI][0].index(selected_port)
         return index_NBI, index_Port
 
-    def POints_find(self, index_NBI,  index_Port, Ports_For_NBI):
-        Arr_index=[]
-        n = Ports_For_NBI[index_NBI][2][index_Port] -Ports_For_NBI[index_NBI][1][index_Port]
-        for i in range(int(n)+1):
+    def POints_find(self, index_NBI, index_Port, Ports_For_NBI):
+        # Compute range of points for the selected NBI and port
+        Arr_index = []
+        n = Ports_For_NBI[index_NBI][2][index_Port] - Ports_For_NBI[index_NBI][1][index_Port]
+        for i in range(int(n) + 1):
             index = Ports_For_NBI[index_NBI][1][index_Port] + i
             Arr_index.append(index)
         
         return Arr_index
 
     def points_on_line_NBI(self, NBI_start, NBI_end):
-
-         X_point_on_NBI = [np.array([]) for _ in range(len(NBI_start[0]))]
-         Y_point_on_NBI = [np.array([]) for _ in range(len(NBI_start[0]))]
-         Z_point_on_NBI = [np.array([]) for _ in range(len(NBI_start[0]))]
+        # Generate intermediate points for all NBIs
+        X_point_on_NBI = [np.array([]) for _ in range(len(NBI_start[0]))]
+        Y_point_on_NBI = [np.array([]) for _ in range(len(NBI_start[0]))]
+        Z_point_on_NBI = [np.array([]) for _ in range(len(NBI_start[0]))]
          
-         for i in range(len(NBI_end[0])):
-             k_x = (NBI_end[0][i] - NBI_start[0][i])
-             k_y = (NBI_end[1][i] - NBI_start[1][i])
-             k_z = (NBI_end[2][i] - NBI_start[2][i])
+        for i in range(len(NBI_end[0])):
+            k_x = (NBI_end[0][i] - NBI_start[0][i])
+            k_y = (NBI_end[1][i] - NBI_start[1][i])
+            k_z = (NBI_end[2][i] - NBI_start[2][i])
 
+            for j in range(21):
+                x_k = NBI_start[0][i] + k_x * (j / 20)
+                y_k = NBI_start[1][i] + k_y * (j / 20)
+                z_k = NBI_start[2][i] + k_z * (j / 20)
 
-             for j in range(21):
+                if j != 0 and j != 20:
+                    X_point_on_NBI[i] = np.append(X_point_on_NBI[i], x_k)
+                    Y_point_on_NBI[i] = np.append(Y_point_on_NBI[i], y_k)
+                    Z_point_on_NBI[i] = np.append(Z_point_on_NBI[i], z_k)
 
-                 x_k = NBI_start[0][i] + k_x * (j / 20)
-                 y_k = NBI_start[1][i] + k_y * (j / 20)
-                 z_k = NBI_start[2][i] + k_z * (j / 20)
-                 
-                 
-                 if j !=0 and j != 20:
-                  X_point_on_NBI[i] = np.append(X_point_on_NBI[i], x_k)
-                  Y_point_on_NBI[i] = np.append(Y_point_on_NBI[i], y_k)
-                  Z_point_on_NBI[i] = np.append(Z_point_on_NBI[i], z_k)
-
-         NBI_points = np.array([X_point_on_NBI, Y_point_on_NBI, Z_point_on_NBI])
-         return NBI_points 
+        NBI_points = np.array([X_point_on_NBI, Y_point_on_NBI, Z_point_on_NBI])
+        return NBI_points 
     
     def Points_on_NBI(self, NBI_Points_start, NBI_Points_end, N):
-
-         X_point_on_NBI = np.array([])
-         Y_point_on_NBI = np.array([])
-         Z_point_on_NBI = np.array([])
+        # Generate N intermediate points between start and end points on an NBI
+        X_point_on_NBI = np.array([])
+        Y_point_on_NBI = np.array([])
+        Z_point_on_NBI = np.array([])
          
-         
-         k_x = (NBI_Points_end[0] - NBI_Points_start[0])
-         k_y = (NBI_Points_end[1] - NBI_Points_start[1])
-         k_z = (NBI_Points_end[2] - NBI_Points_start[2])
+        k_x = (NBI_Points_end[0] - NBI_Points_start[0])
+        k_y = (NBI_Points_end[1] - NBI_Points_start[1])
+        k_z = (NBI_Points_end[2] - NBI_Points_start[2])
 
+        for j in range(N):
+            x_k = NBI_Points_start[0] + k_x * (j / (N-1))
+            y_k = NBI_Points_start[1] + k_y * (j / (N-1))
+            z_k = NBI_Points_start[2] + k_z * (j / (N-1))
 
-         for j in range(N):
+            X_point_on_NBI = np.append(X_point_on_NBI, x_k)
+            Y_point_on_NBI = np.append(Y_point_on_NBI, y_k)
+            Z_point_on_NBI = np.append(Z_point_on_NBI, z_k)
 
-                 x_k = NBI_Points_start[0] + k_x * (j / (N-1))
-                 y_k = NBI_Points_start[1] + k_y * (j / (N-1))
-                 z_k = NBI_Points_start[2] + k_z * (j / (N-1))
-                 
-                 
-                 
-                 X_point_on_NBI = np.append(X_point_on_NBI, x_k)
-                 Y_point_on_NBI = np.append(Y_point_on_NBI, y_k)
-                 Z_point_on_NBI = np.append(Z_point_on_NBI, z_k)
-
-         NBI_points = np.array([X_point_on_NBI, Y_point_on_NBI, Z_point_on_NBI])
-         return NBI_points
+        NBI_points = np.array([X_point_on_NBI, Y_point_on_NBI, Z_point_on_NBI])
+        return NBI_points
 
     def find_point_on_NBI(self, Array_points_on_selected_NBI_and_Port, NBI_points, index_NBI):
-        NBI_seected_points = [[],[],[]]
+        # Extract specific points from the NBI
+        NBI_seected_points = [[], [], []]
         for i in range(len(Array_points_on_selected_NBI_and_Port)):
             j = int(Array_points_on_selected_NBI_and_Port[i])
             NBI_seected_points[0].append(NBI_points[0][index_NBI][j])
@@ -471,6 +470,7 @@ class Data:
         return NBI_seected_points
     
 def angle_between_vectors(vector1, vector2):
+    # Compute angle between two vectors
     dot_product = sum(a * b for a, b in zip(vector1, vector2))
     norm1 = math.sqrt(sum(a**2 for a in vector1))
     norm2 = math.sqrt(sum(b**2 for b in vector2))
@@ -478,10 +478,9 @@ def angle_between_vectors(vector1, vector2):
     cosine_theta = dot_product / (norm1 * norm2)
     angle_in_radians = math.acos(cosine_theta)
 
-
     angle_in_degrees = math.degrees(angle_in_radians)
-
     return angle_in_degrees
+
 
 if __name__ == "__main__":
     app = App()
